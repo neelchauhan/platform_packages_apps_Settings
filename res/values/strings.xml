@@ -3711,6 +3711,10 @@
     <!-- Label for ethernet tether checkbox [CHAR LIMIT=NONE]-->
     <string name="ethernet_tether_checkbox_text">Ethernet tethering</string>
 
+    <!-- Enable Tethering on Data Saver -->
+    <!-- Label for data saver tether checkbox [CHAR LIMIT=NONE]-->
+    <string name="data_saver_tether_checkbox_text">Enable tethering on data saver</string>
+
     <!-- Tethering footer info [CHAR LIMIT=NONE]-->
     <string name="tethering_footer_info">Use hotspot and tethering to provide internet to other devices through your mobile data connection. Apps can also create a hotspot to share content with nearby devices.</string>
     <!-- Tethering footer info for the device which supports Wi-Fi and Wi-Fi tethering enabled at the same time [CHAR LIMIT=NONE]-->

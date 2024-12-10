@@ -49,6 +49,12 @@
         android:summary="@string/ethernet_tethering_subtext"
         settings:keywords="@string/keywords_hotspot_tethering" />
 
+    <SwitchPreferenceCompat
+        android:key="enable_data_saver_tethering"
+        android:title="@string/data_saver_tether_checkbox_text"
+        android:summary="@string/data_saver_tethering_subtext"
+        settings:keywords="@string/keywords_hotspot_tethering" />
+
     <com.android.settingslib.widget.FooterPreference
         android:key="disabled_on_data_saver"
         android:title="@string/tether_settings_disabled_on_data_saver"

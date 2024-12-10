@@ -87,6 +87,7 @@ public class TetherSettings extends RestrictedSettingsFragment
     @VisibleForTesting
     static final String KEY_ENABLE_BLUETOOTH_TETHERING = "enable_bluetooth_tethering";
     private static final String KEY_ENABLE_ETHERNET_TETHERING = "enable_ethernet_tethering";
+    private static final String KEY_ENABLE_DATA_SAVER_TETHERING = "enable_data_saver_tethering";
     private static final String KEY_DATA_SAVER_FOOTER = "disabled_on_data_saver";
     @VisibleForTesting
     static final String KEY_TETHER_PREFS_TOP_INTRO = "tether_prefs_top_intro";
@@ -100,6 +101,8 @@ public class TetherSettings extends RestrictedSettingsFragment
     TwoStatePreference mBluetoothTether;
     @VisibleForTesting
     TwoStatePreference mEthernetTether;
+    @VisibleForTesting
+    TwoStatePreference mDataSaverTether;
 
     private BroadcastReceiver mTetherChangeReceiver;
     private BroadcastReceiver mBluetoothStateReceiver;
@@ -209,6 +212,7 @@ public class TetherSettings extends RestrictedSettingsFragment
         if (!ethernetAvailable) getPreferenceScreen().removePreference(mEthernetTether);
         // Set initial state based on Data Saver mode.
         onDataSaverChanged(mDataSaverBackend.isDataSaverEnabled());
+        mDataSaverTether.setChecked(false);
     }
 
     @VisibleForTesting
@@ -247,15 +251,16 @@ public class TetherSettings extends RestrictedSettingsFragment
         mUsbTether = (RestrictedSwitchPreference) findPreference(KEY_USB_TETHER_SETTINGS);
         mBluetoothTether = (TwoStatePreference) findPreference(KEY_ENABLE_BLUETOOTH_TETHERING);
         mEthernetTether = (TwoStatePreference) findPreference(KEY_ENABLE_ETHERNET_TETHERING);
+        mDataSaverTether = (TwoStatePreference) findPreference(KEY_ENABLE_DATA_SAVER_TETHERING);
     }
 
     @Override
     public void onDataSaverChanged(boolean isDataSaving) {
         mDataSaverEnabled = isDataSaving;
-        mWifiTetherPreferenceController.setDataSaverEnabled(mDataSaverEnabled);
-        mUsbTether.setEnabled(!mDataSaverEnabled);
-        mBluetoothTether.setEnabled(!mDataSaverEnabled);
-        mEthernetTether.setEnabled(!mDataSaverEnabled);
+        mWifiTetherPreferenceController.setDataSaverEnabled(mDataSaverEnabled && !mDataSaverTether.isChecked());
+        mUsbTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
+        mBluetoothTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
+        mEthernetTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
         mDataSaverFooter.setVisible(mDataSaverEnabled);
     }
 
@@ -461,7 +466,7 @@ public class TetherSettings extends RestrictedSettingsFragment
                     + ", usbTethered : " + usbTethered);
         }
         if (usbTethered) {
-            mUsbTether.setEnabled(!mDataSaverEnabled);
+            mUsbTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
             mUsbTether.setChecked(true);
             final RestrictedLockUtils.EnforcedAdmin enforcedAdmin =
                     checkIfUsbDataSignalingIsDisabled(mContext, UserHandle.myUserId());
@@ -482,7 +487,7 @@ public class TetherSettings extends RestrictedSettingsFragment
         if (enforcedAdmin != null) {
             mUsbTether.setDisabledByAdmin(enforcedAdmin);
         } else if (usbAvailable) {
-            mUsbTether.setEnabled(!mDataSaverEnabled);
+            mUsbTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
         } else {
             mUsbTether.setEnabled(false);
         }
@@ -520,9 +525,9 @@ public class TetherSettings extends RestrictedSettingsFragment
         } else {
             if (btState == BluetoothAdapter.STATE_ON && isBluetoothTetheringOn()) {
                 mBluetoothTether.setChecked(true);
-                mBluetoothTether.setEnabled(!mDataSaverEnabled);
+                mBluetoothTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
             } else {
-                mBluetoothTether.setEnabled(!mDataSaverEnabled);
+                mBluetoothTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
                 mBluetoothTether.setChecked(false);
             }
         }
@@ -547,10 +552,10 @@ public class TetherSettings extends RestrictedSettingsFragment
         }
 
         if (isTethered) {
-            mEthernetTether.setEnabled(!mDataSaverEnabled);
+            mEthernetTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
             mEthernetTether.setChecked(true);
         } else if (mAvailableInterfaces.size() > 0) {
-            mEthernetTether.setEnabled(!mDataSaverEnabled);
+            mEthernetTether.setEnabled(!mDataSaverEnabled || mDataSaverTether.isChecked());
             mEthernetTether.setChecked(false);
         } else {
             mEthernetTether.setEnabled(false);
@@ -659,6 +664,11 @@ public class TetherSettings extends RestrictedSettingsFragment
                     if (!ethernetAvailable) {
                         keys.add(KEY_ENABLE_ETHERNET_TETHERING);
                     }
+
+                    if (!TetherUtil.isTetherAvailable(context)) {
+                        keys.add(KEY_ENABLE_DATA_SAVER_TETHERING);
+                    }
+
                     return keys;
                 }
     };

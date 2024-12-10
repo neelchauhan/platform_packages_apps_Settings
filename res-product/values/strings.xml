@@ -509,6 +509,8 @@
     <string name="ethernet_tethering_subtext" product="default">Share phone\u2019s internet connection via Ethernet</string>
     <!-- Ethernet Tethering subtext for tablet [CHAR LIMIT=NONE]-->
     <string name="ethernet_tethering_subtext" product="tablet">Share tablet\u2019s internet connection via Ethernet</string>
+    <!-- Data Saver Tethering subtext [CHAR LIMIT=NONE]-->
+    <string name="data_saver_tethering_subtext" product="default">Unconditionally allow tethering while on data saver mode</string>
     <!-- Main settings screen, setting title for the user to go into the About phone screen -->
     <string name="about_settings" product="tablet">About tablet</string>
     <!-- Main settings screen, setting title for the user to go into the About phone screen -->
