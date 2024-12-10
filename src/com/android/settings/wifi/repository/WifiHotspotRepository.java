@@ -384,11 +384,7 @@ public class WifiHotspotRepository {
      * @return {@code true} if Wi-Fi 5 GHz Band is supported
      */
     public boolean is5GHzBandSupported() {
-        if (mIs5gBandSupported == null) {
-            mIs5gBandSupported = mWifiManager.is5GHzBandSupported();
-            log("is5GHzBandSupported():" + mIs5gBandSupported);
-        }
-        return mIs5gBandSupported;
+        return true;
     }
 
     /**
@@ -397,10 +393,7 @@ public class WifiHotspotRepository {
      * @return {@code true} if Wi-Fi Hotspot 5 GHz Band is available
      */
     public boolean is5gAvailable() {
-        if (!mBand5g.isChannelsReady && is5GHzBandSupported()) {
-            isChannelAvailable(mBand5g);
-        }
-        return mBand5g.isAvailable();
+        return true;
     }
 
     /**
@@ -426,11 +419,7 @@ public class WifiHotspotRepository {
      * @return {@code true} if Wi-Fi 6 GHz Band is supported
      */
     public boolean is6GHzBandSupported() {
-        if (mIs6gBandSupported == null) {
-            mIs6gBandSupported = mWifiManager.is6GHzBandSupported();
-            log("is6GHzBandSupported():" + mIs6gBandSupported);
-        }
-        return mIs6gBandSupported;
+        return true;
     }
 
     /**
@@ -439,10 +428,7 @@ public class WifiHotspotRepository {
      * @return {@code true} if Wi-Fi Hotspot 6 GHz Band is available
      */
     public boolean is6gAvailable() {
-        if (!mBand6g.isChannelsReady && is6GHzBandSupported()) {
-            isChannelAvailable(mBand6g);
-        }
-        return mBand6g.isAvailable();
+        return true;
     }
 
     /**
